@@ -133,8 +133,8 @@ public class Bus {
         return seats;
     }
 
-    public void setSeats(int[] seats) {
-        this.seats = seats;
+    public void setSeats(int seatsNo,long userId) {
+        seats[seatsNo] = (int) userId;
     }
 
     public int getTotalSeats() {
