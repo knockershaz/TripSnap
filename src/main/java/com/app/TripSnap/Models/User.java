@@ -22,7 +22,10 @@ public class User {
     private String userEmail;
     private int userAge;
 
-    public User(long userId, String userName, String userEmail, int userAge, String userGender, String userPassword,boolean admin) {
+    public User() {
+    }
+
+    public User(long userId, String userName, String userEmail, int userAge, String userGender, String userPassword, boolean admin) {
         this.userId = userId;
         this.userName = userName;
         this.userEmail = userEmail;
