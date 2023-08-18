@@ -135,6 +135,7 @@ public class Bus {
     }
 
     private String fare;
+
     public Bus(String busNo, String busName, String source, String destination, int distance, Date departure, Date arrival, String duration, String fare, Float rating, List<String> amenities, String busClass, HashMap<Integer, Integer> seats, int totalSeats) {
         this.busNo = busNo;
         this.busName = busName;
