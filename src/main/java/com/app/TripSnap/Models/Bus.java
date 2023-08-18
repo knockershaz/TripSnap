@@ -21,8 +21,19 @@ public class Bus {
     private Date departure;
     private Date arrival;
     private String duration;
+    private Float rating;
+    private List<String> amenities;
+    private String busClass;
+    private int[] seats;
+    private String fare;
+    private int totalSeats;
 
-    public String getBusNo() {
+    public Bus() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public String getBusNo() {
         return busNo;
     }
 
@@ -134,9 +145,9 @@ public class Bus {
         this.totalSeats = totalSeats;
     }
 
-    private String fare;
+    
 
-    public Bus(String busNo, String busName, String source, String destination, int distance, Date departure, Date arrival, String duration, String fare, Float rating, List<String> amenities, String busClass, HashMap<Integer, Integer> seats, int totalSeats) {
+    public Bus(String busNo, String busName, String source, String destination, int distance, Date departure, Date arrival, String duration, String fare, Float rating, List<String> amenities, String busClass, int totalSeats) {
         this.busNo = busNo;
         this.busName = busName;
         this.source = source;
@@ -149,13 +160,10 @@ public class Bus {
         this.rating = rating;
         this.amenities = amenities;
         this.busClass = busClass;
-        this.seats = new int[totalSeats+1];
+        
+        seats = new int[totalSeats+1];
         this.totalSeats = totalSeats;
     }
 
-    private Float rating;
-    private List<String> amenities;
-    private String busClass;
-    private int[] seats;
-    private int totalSeats;
+ 
 }
