@@ -34,7 +34,7 @@ public class BusController {
 	}
 	
 	@GetMapping("/bus/{id}")
-	public Optional<Bus> getById(@PathVariable(value="id")int id) {
+	public Optional<Bus> getById(@PathVariable(value="id")String id) {
 		return busRepository.findById(id);
 	}
 	
