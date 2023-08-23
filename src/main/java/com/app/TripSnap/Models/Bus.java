@@ -5,8 +5,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.sql.Array;
 import java.util.List;
 
 @Entity
@@ -133,8 +131,9 @@ public class Bus {
         return seats;
     }
 
-    public void setSeats(int seatsNo,long userId) {
-        seats[seatsNo] = (int) userId;
+    public void setSeats(int totalSeats) {
+        //seats[seatsNo] = (int) userId;
+        this.seats = new int[totalSeats+1];
     }
 
     public int getTotalSeats() {
@@ -161,7 +160,7 @@ public class Bus {
         this.amenities = amenities;
         this.busClass = busClass;
         
-        seats = new int[totalSeats+1];
+        this.seats = new int[totalSeats+1];
         this.totalSeats = totalSeats;
     }
 

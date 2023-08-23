@@ -10,4 +10,4 @@ public class TripSnapApplication {
 		SpringApplication.run(TripSnapApplication.class, args);
 	}
 
-}
+		}
