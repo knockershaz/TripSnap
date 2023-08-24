@@ -1,32 +1,54 @@
 package com.app.TripSnap.Controller;
 
+import com.app.TripSnap.Exception.AdminException;
+import com.app.TripSnap.Exception.UserException;
 import com.app.TripSnap.Models.User;
-import com.app.TripSnap.Repository.UserRepository;
+import com.app.TripSnap.Service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/api")
 public class UserController {
+
     @Autowired
-    UserRepository uc;
+    private UserService userService;
 
-    @PostMapping("/user/save")
-    public User saveUser(@RequestBody User user) {
-        uc.save(user);
-        return user;
+    @PostMapping("/user/register")
+    public ResponseEntity<User> registerUser(@Valid @RequestBody User user) throws UserException {
+        User savedUser = userService.createUser(user);
+        return new ResponseEntity<User>(savedUser, HttpStatus.CREATED);
     }
 
-    @GetMapping("/user/{id}")
-    public Optional<User> viewUser(@PathVariable(value="id") Long id){
-        return uc.findById(id);
+    @PutMapping("/user/update")
+    public  ResponseEntity<User> updateUser(@Valid @RequestBody User user, @RequestParam(required = false) String key) throws UserException {
+        User updatedUser = userService.updateUser(user, key);
+        return new ResponseEntity<User>(updatedUser, HttpStatus.OK);
     }
 
-    @GetMapping("/user")
-    public List<User> getAllUser(){
-        return (List<User>) uc.findAll();
+    @DeleteMapping("/admin/user/delete/{userId}")
+    public  ResponseEntity<User> deleteUser(@PathVariable("userId") Integer userId, @RequestParam(required = false) String key) throws UserException, AdminException {
+        User deletedUser= userService.deleteUser(userId, key);
+        return new ResponseEntity<User>(deletedUser, HttpStatus.OK);
     }
+
+    @GetMapping("/admin/user/{userId}")
+    public  ResponseEntity<User> viewUserById(@PathVariable("userId") Integer userId, @RequestParam(required = false) String key) throws UserException, AdminException {
+        User user= userService.viewUserById(userId, key);
+        return new ResponseEntity<User>(user, HttpStatus.FOUND);
+    }
+
+    @GetMapping("/admin/user/all")
+    public  ResponseEntity<List<User>> viewAllUser(@RequestParam(required = false) String key) throws UserException, AdminException {
+        List<User> list = userService.viewAllUser(key);
+        return new ResponseEntity<List<User>>(list, HttpStatus.OK);
+
+    }
+
 }

@@ -1,42 +1,86 @@
 package com.app.TripSnap.Controller;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import com.app.TripSnap.Exception.AdminException;
+import com.app.TripSnap.Exception.BusException;
 import com.app.TripSnap.Models.Bus;
-import com.app.TripSnap.Repository.BusRepository;
+import com.app.TripSnap.Service.BusService;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/api")
 public class BusController {
-	
-	@Autowired
-	private BusRepository busRepository;
-	
-	@PostMapping("/bus/add")
-	public Bus addBus(@RequestBody Bus bus) {
-		busRepository.save(bus);
-		return bus;
-	}
-	
-	
-	@GetMapping("/bus")
-	public List<Bus> getAllBus(){
-		return (List<Bus>) busRepository.findAll();
-	}
-	
-	@GetMapping("/bus/{id}")
-	public Optional<Bus> getById(@PathVariable(value="id")String id) {
-		return busRepository.findById(id);
-	}
-	
 
+    @Autowired
+    private BusService busServ;
+
+    //admin endpoints
+
+    @PostMapping("/admin/bus/add")
+    public ResponseEntity<Bus> addBusHandler(@Valid @RequestBody Bus bus, @RequestParam(required = false) String key)throws BusException, AdminException {
+
+        Bus newBus = busServ.addBus(bus,key);
+        return new ResponseEntity<>(newBus, HttpStatus.CREATED);
+
+
+    }
+
+    @PutMapping("/admin/bus/update")
+    public ResponseEntity<Bus> updateBusHandler(@Valid @RequestBody Bus bus,@RequestParam(required = false) String key) throws BusException, AdminException{
+        Bus newBus = busServ.updateBus(bus,key);
+        return new ResponseEntity<>(newBus,HttpStatus.OK);
+    }
+
+
+
+    @DeleteMapping("/admin/bus/delete/{busId}")
+    public ResponseEntity<Bus> deleteBusByBusIdHandler(@PathVariable("busId") Integer busId,@RequestParam(required = false) String key) throws BusException, AdminException{
+        Bus deletedBus = busServ.deleteBus(busId,key);
+        return new ResponseEntity<>(deletedBus,HttpStatus.OK);
+    }
+
+    //shared endpoints (user and admin both)
+    @GetMapping("/bus/all")
+    public ResponseEntity<List<Bus>> getAllBusesHandler()throws BusException{
+        List<Bus> allBuses = busServ.viewAllBuses();
+        return new ResponseEntity<>(allBuses,HttpStatus.OK);
+    }
+
+    @GetMapping("/bus/{busId}")
+    public ResponseEntity<Bus> getBusByIdHandler(@PathVariable("busId") Integer busId) throws BusException{
+        Bus bus = busServ.viewBus(busId);
+        return new ResponseEntity<>(bus,HttpStatus.OK);
+    }
+
+    @GetMapping("/bus/type/{busType}")
+    public ResponseEntity<List<Bus>> getBusesByBusTypeHandler(@PathVariable("busType") String busType) throws BusException{
+        List<Bus> busList = busServ.viewBusByBusType(busType);
+        return new ResponseEntity<>(busList,HttpStatus.OK);
+    }
 }
+
+// format for sending post request
+//{
+//        "busName": "16thBus",
+//        "driverName": "yash",
+//        "busType": "ac",
+//        "routeFrom": "mumbai",
+//        "routeTo": "lucknow",
+//        "busJourneyDate": "2023-05-08",
+//        "arrivalTime":"09:00:00",
+//        "departureTime":"12:00:00",
+//        "seats": 35,
+//        "availableSeats": 35,
+//        "fare": 350,
+//        "route": {
+//        "routeFrom": "a",
+//        "routeTo": "b",
+//        "distance": 2000
+//        }
+//        }

@@ -1,11 +1,13 @@
 package com.app.TripSnap.Repository;
 
-import org.springframework.data.repository.CrudRepository;
-
 import com.app.TripSnap.Models.Bus;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import java.util.List;
 
-public interface BusRepository  extends CrudRepository<Bus,String>{
-	
-	
+@Repository
+public interface BusRepository extends JpaRepository<Bus,Integer> {
+    public List<Bus> findByBusType(String busType);
 
+    public Bus findByRouteFromAndRouteTo(String routeFrom, String routeTo);
 }

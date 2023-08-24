@@ -1,168 +1,72 @@
 package com.app.TripSnap.Models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Bus {
     @Id
-    private String busNo;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer busId;
+
+    @NotBlank(message = "Bus name can't be null/blank, Please provide a valid name first!")
     private String busName;
-    private String source;
-    private String destination;
-    @Column(name = "Distance(KM)")
-    private int distance;
-    private Date departure;
-    private Date arrival;
-    private String duration;
-    private Float rating;
-    private List<String> amenities;
-    private String busClass;
-    private int[] seats;
-    private String fare;
-    private int totalSeats;
 
-    public Bus() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+    @NotBlank(message = "Driver name can't be null/blank, Please provide a valid name first!")
+    private String driverName;
 
-	public String getBusNo() {
-        return busNo;
-    }
+    @NotBlank(message = "Bus Type can't be null/blank, Please provide a valid bus type")
+    private String busType;
 
-    public void setBusNo(String busNo) {
-        this.busNo = busNo;
-    }
+    @NotBlank(message = "Choose a valid starting point.")
+    private String routeFrom;
 
-    public String getBusName() {
-        return busName;
-    }
+    @NotBlank(message = "Choose a valid destination.")
+    private String routeTo;
 
-    public void setBusName(String busName) {
-        this.busName = busName;
-    }
+    @NotNull(message = "Bus Journey Date can't be null, Please provide correct date")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private LocalDate busJourneyDate;
 
-    public String getSource() {
-        return source;
-    }
+    @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
+    private LocalTime arrivalTime;
 
-    public void setSource(String source) {
-        this.source = source;
-    }
+    @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
+    private LocalTime departureTime;
 
-    public String getDestination() {
-        return destination;
-    }
+    @Column(name = "total_seats")
+    private Integer seats;
 
-    public void setDestination(String destination) {
-        this.destination = destination;
-    }
+    private Integer availableSeats;
 
-    public int getDistance() {
-        return distance;
-    }
+    @NotNull(message = "fare can't be null")
+    private Integer fare;
 
-    public void setDistance(int distance) {
-        this.distance = distance;
-    }
+    @ManyToOne(cascade = CascadeType.ALL)
+    private Route route;
 
-    public Date getDeparture() {
-        return departure;
-    }
-
-    public void setDeparture(Date departure) {
-        this.departure = departure;
-    }
-
-    public Date getArrival() {
-        return arrival;
-    }
-
-    public void setArrival(Date arrival) {
-        this.arrival = arrival;
-    }
-
-    public String getDuration() {
-        return duration;
-    }
-
-    public void setDuration(String duration) {
-        this.duration = duration;
-    }
-
-    public String getFare() {
-        return fare;
-    }
-
-    public void setFare(String fare) {
-        this.fare = fare;
-    }
-
-    public Float getRating() {
-        return rating;
-    }
-
-    public void setRating(Float rating) {
-        this.rating = rating;
-    }
-
-    public List<String> getAmenities() {
-        return amenities;
-    }
-
-    public void setAmenities(List<String> amenities) {
-        this.amenities = amenities;
-    }
-
-    public String getBusClass() {
-        return busClass;
-    }
-
-    public void setBusClass(String busClass) {
-        this.busClass = busClass;
-    }
-
-    public int[] getSeats() {
-        return seats;
-    }
-
-    public void setSeats(int totalSeats) {
-        //seats[seatsNo] = (int) userId;
-        this.seats = new int[totalSeats+1];
-    }
-
-    public int getTotalSeats() {
-        return totalSeats;
-    }
-
-    public void setTotalSeats(int totalSeats) {
-        this.totalSeats = totalSeats;
-    }
-
-    
-
-    public Bus(String busNo, String busName, String source, String destination, int distance, Date departure, Date arrival, String duration, String fare, Float rating, List<String> amenities, String busClass, int totalSeats) {
-        this.busNo = busNo;
-        this.busName = busName;
-        this.source = source;
-        this.destination = destination;
-        this.distance = distance;
-        this.departure = departure;
-        this.arrival = arrival;
-        this.duration = duration;
-        this.fare = fare;
-        this.rating = rating;
-        this.amenities = amenities;
-        this.busClass = busClass;
-        
-        this.seats = new int[totalSeats+1];
-        this.totalSeats = totalSeats;
-    }
-
- 
+    @JsonIgnore
+    @OneToMany(mappedBy = "bus",cascade = CascadeType.ALL)
+    private List<Reservation> reservationList = new ArrayList<>();
 }
+
+

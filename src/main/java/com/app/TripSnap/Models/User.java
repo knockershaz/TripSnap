@@ -1,88 +1,48 @@
 package com.app.TripSnap.Models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class User {
-
     @Id
-    private long userId;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer userID;
 
-    public boolean getAdmin() {
-        return admin;
-    }
+    @NotNull(message = "Name cannot be null!")
+    @NotBlank(message = "Name cannot be blank!")
+    private String firstName;
+    private String lastName;
 
-    public void setAdmin(boolean admin) {
-        this.admin = admin;
-    }
+    @NotNull(message="Mobile number cannot be null!")
+    @NotBlank(message= "Mobile number cannot be blank!")
+    @Pattern(regexp = "[6789]{1}[0-9]{9}", message = "Enter valid 10 digit mobile number")
+    @Size(min = 10, max = 10)
+    private String mobile;
 
-    private boolean admin=false;
-    private String userName;
-    private String userEmail;
-    private int userAge;
+    @Email
+    private String email;
 
-    public User() {
-    }
+    @NotNull(message="Password cannot be null!")
+    @NotBlank(message= "Password cannot be blank!")
+    @Pattern(regexp = "[A-Za-z0-9!@#$%^&*_]{8,15}", message = "Password must be 8-15 characters including alphanumerics and special characters")
+    private String password;
 
-    public User(long userId, String userName, String userEmail, int userAge, String userGender, String userPassword, boolean admin) {
-        this.userId = userId;
-        this.userName = userName;
-        this.userEmail = userEmail;
-        this.userAge = userAge;
-        this.userGender = userGender;
-        this.userPassword = userPassword;
-        this.admin=admin;
-    }
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Reservation> reservationList = new ArrayList<>();
 
-    private String userGender;
-    private String userPassword;
-
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getUserEmail() {
-        return userEmail;
-    }
-
-    public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
-    }
-
-    public int getUserAge() {
-        return userAge;
-    }
-
-    public void setUserAge(int userAge) {
-        this.userAge = userAge;
-    }
-
-    public String getUserGender() {
-        return userGender;
-    }
-
-    public void setUserGender(String userGender) {
-        this.userGender = userGender;
-    }
-
-    public String getUserPassword() {
-        return userPassword;
-    }
-
-    public void setUserPassword(String userPassword) {
-        this.userPassword = userPassword;
-    }
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    private List<Feedback> feedbackList = new ArrayList<>();
 }
