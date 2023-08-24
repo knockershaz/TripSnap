@@ -19,8 +19,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer userID;
 
-    @NotNull(message = "Name cannot be null!")
-    @NotBlank(message = "Name cannot be blank!")
+    @NotNull(message = "Name cannot be null !")
+    @NotBlank(message = "Name cannot be blank !")
     private String firstName;
     private String lastName;
 
